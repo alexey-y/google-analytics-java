@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.brsanthu.googleanalytics.GoogleAnalyticsConfig;
 import com.brsanthu.googleanalytics.http.ApacheHttpClient;
+import com.brsanthu.googleanalytics.http.WSHttpClient;
 import com.brsanthu.googleanalytics.requests.AppViewHit;
 import com.brsanthu.googleanalytics.requests.ItemHit;
 import com.brsanthu.googleanalytics.requests.PageViewHit;
@@ -20,7 +21,7 @@ public class GoogleAnalyticsTest {
 	@BeforeClass
 	public static void setup() {
 		ga = new GoogleAnalytics("UA-44034973-2", new GoogleAnalyticsConfig());
-		ga.setHttpClient(new ApacheHttpClient());
+		ga.setHttpClient(new WSHttpClient());
 		System.out.println("Creating Google Analytis Object");
 	}
 
