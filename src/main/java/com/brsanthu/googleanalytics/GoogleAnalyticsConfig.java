@@ -30,16 +30,14 @@ public class GoogleAnalyticsConfig {
 	private String threadNameFormat = "googleanalytics-thread-{0}";
 	private boolean enabled = true;
 	private int maxThreads = 1;
-	private boolean useHttps = true;
+	private boolean useHttps = false;
 	private boolean validate = true;
 	private String httpUrl = "http://www.google-analytics.com/collect";
 	private String httpsUrl = "https://www.google-analytics.com/collect";
-	private String userAgent = null;
 	private String proxyHost = null;
 	private int proxyPort = 80;
 	private String proxyUserName = null;
 	private String proxyPassword = null;
-	private boolean deriveSystemParameters = true;
 	private boolean gatherStats = false;
 
 	public boolean isGatherStats() {
@@ -74,20 +72,20 @@ public class GoogleAnalyticsConfig {
 		return threadNameFormat;
 	}
 
-	/**
-	 * If true, derives the system properties (User Language, Region, Country, Screen Size, Color Depth, and File encoding) and adds to
-	 * the default request.
-	 *
-	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
-	 */
-	public GoogleAnalyticsConfig setDeriveSystemParameters(boolean deriveSystemProperties) {
-		this.deriveSystemParameters = deriveSystemProperties;
-		return this;
-	}
-
-	public boolean isDeriveSystemParameters() {
-		return deriveSystemParameters;
-	}
+//	/**
+//	 * If true, derives the system properties (User Language, Region, Country, Screen Size, Color Depth, and File encoding) and adds to
+//	 * the default request.
+//	 *
+//	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
+//	 */
+//	public GoogleAnalyticsConfig setDeriveSystemParameters(boolean deriveSystemProperties) {
+//		this.deriveSystemParameters = deriveSystemProperties;
+//		return this;
+//	}
+//
+//	public boolean isDeriveSystemParameters() {
+//		return deriveSystemParameters;
+//	}
 	/**
 	 * Sets the user name which should be used to authenticate to the proxy server. This is applicable only if {@link #setProxyHost(String)} is not empty.
 	 *
@@ -141,20 +139,12 @@ public class GoogleAnalyticsConfig {
 		this.proxyPort = proxyPort;
 		return this;
 	}
-	public String getUserAgent() {
-		return userAgent;
-	}
-
 	/**
 	 * Sets the user agent string that should be sent while making the http request. Default is Apache Http Client's user agent,
 	 * which looks something similar to this. <code>Apache-HttpClient/release (java 1.5)</code>
 	 *
 	 * <p>This is <strong>initialization</strong> level configuration (must be set while creating GoogleAnalytics object).</p>
 	 */
-	public GoogleAnalyticsConfig setUserAgent(String userAgent) {
-		this.userAgent = userAgent;
-		return this;
-	}
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -237,7 +227,7 @@ public class GoogleAnalyticsConfig {
 		return this;
 	}
 
-	String getUrl() {
+	public String getUrl() {
 		return useHttps?httpsUrl:httpUrl;
 	}
 
@@ -269,11 +259,6 @@ public class GoogleAnalyticsConfig {
 			builder.append(httpsUrl);
 			builder.append(", ");
 		}
-		if (userAgent != null) {
-			builder.append("userAgent=");
-			builder.append(userAgent);
-			builder.append(", ");
-		}
 		if (proxyHost != null) {
 			builder.append("proxyHost=");
 			builder.append(proxyHost);
@@ -292,15 +277,13 @@ public class GoogleAnalyticsConfig {
 			builder.append(mask(proxyPassword));
 			builder.append(", ");
 		}
-		builder.append("deriveSystemParameters=");
-		builder.append(deriveSystemParameters);
 		builder.append(", gatherStats=");
 		builder.append(gatherStats);
 		builder.append("]");
 		return builder.toString();
 	}
 
-    public static String mask(String value) {
+    private static String mask(String value) {
     	return value == null?null:"********";
     }
 }

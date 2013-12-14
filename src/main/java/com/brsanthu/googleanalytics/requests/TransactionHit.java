@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.requests;
 
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CURRENCY_CODE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_AFFILIATION;
@@ -19,6 +19,8 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_REVENUE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_SHIPPING;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRANSACTION_TAX;
+
+import com.brsanthu.googleanalytics.GoogleAnalyticsRequest;
 
 /**
  * GA request to track ecommerce transaction.

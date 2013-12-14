@@ -4,6 +4,15 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.brsanthu.googleanalytics.requests.AppViewHit;
+import com.brsanthu.googleanalytics.requests.EventHit;
+import com.brsanthu.googleanalytics.requests.ExceptionHit;
+import com.brsanthu.googleanalytics.requests.ItemHit;
+import com.brsanthu.googleanalytics.requests.PageViewHit;
+import com.brsanthu.googleanalytics.requests.SocialHit;
+import com.brsanthu.googleanalytics.requests.TimingHit;
+import com.brsanthu.googleanalytics.requests.TransactionHit;
+
 public class HitTypesTest {
 
 	@Test

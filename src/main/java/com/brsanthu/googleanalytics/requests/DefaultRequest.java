@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.requests;
 
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CURRENCY_CODE;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DNS_TIME;
@@ -45,6 +45,9 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_TIME;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME;
 
+import com.brsanthu.googleanalytics.GoogleAnalytics;
+import com.brsanthu.googleanalytics.GoogleAnalyticsRequest;
+
 /**
  * Default request that captures default value for any of the parameters. Create an instance of
  * this object and specify as constructor parameter to {@link GoogleAnalytics} or set one any time using
@@ -54,17 +57,9 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_
  */
 public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest>{
 
-	public DefaultRequest() {
-		this(null, null, null, null);
-	}
-
-	public DefaultRequest(String hitType) {
-		this(hitType, null, null, null);
-	}
-
-	public DefaultRequest(String hitType, String trackingId, String appName, String appVersion) {
+	public DefaultRequest(String hitType, String appName, String appVersion) {
+		super(hitType, appName, appVersion);
 		hitType(isEmpty(hitType)?"pageView":hitType);
-		trackingId(trackingId);
 		applicationName(appName);
 		applicationVersion(appVersion);
 	}

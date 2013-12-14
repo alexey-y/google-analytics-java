@@ -11,7 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.requests;
+
+import com.brsanthu.googleanalytics.GoogleAnalyticsRequest;
 
 /**
  * GA request to track application page view (for mobile or desktop apps).

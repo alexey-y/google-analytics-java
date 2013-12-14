@@ -1,7 +1,10 @@
 package com.brsanthu.googleanalytics;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
+
+import com.brsanthu.googleanalytics.requests.PageViewHit;
 
 public class GoogleAnalyticsRequestTest {
 

@@ -14,44 +14,14 @@
 package com.brsanthu.googleanalytics;
 
 
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ADWORDS_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.ANONYMIZE_IP;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_NAME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.APPLICATION_VERSION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CACHE_BUSTER;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_CONTENT;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_KEYWORD;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_MEDIUM;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_NAME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CAMPAIGN_SOURCE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CLIENT_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.CONTENT_DESCRIPTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DISPLAY_ADS_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_ENCODING;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_HOST_NAME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_URL;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_PATH;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_REFERRER;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DOCUMENT_TITLE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.FLASH_VERSION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.HIT_TYPE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.JAVA_ENABLED;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.NON_INTERACTION_HIT;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.PROTOCOL_VERSION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.QUEUE_TIME;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SCREEN_COLORS;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SCREEN_RESOLUTION;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.SESSION_CONTROL;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.TRACKING_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_LANGUAGE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.VIEWPORT_SIZE;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXPERIMENT_ID;
-import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.EXPERIMENT_VARIANT;
+import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+
+import com.brsanthu.googleanalytics.requests.DefaultRequest;
+import com.brsanthu.googleanalytics.requests.EventHit;
+import com.brsanthu.googleanalytics.requests.PageViewHit;
 
 /**
  * Base GA Tracking Request containing the standard and custom parameter values.
@@ -65,28 +35,34 @@ import java.util.UUID;
 @SuppressWarnings("unchecked")
 public class GoogleAnalyticsRequest<T> {
 
-	private final static String DEFAULT_CLIENT_ID = UUID.randomUUID().toString();
+	private static final String CUSTOM_METRICS_PREFIX = "cm";
+	private static final String CUSTOM_DIMENSION_PREFIX = "cd";
+	
+	private static final String DEFAULT_HIT_TYPE = "pageView";
+	private static final String DEFAULT_PROTOCOL_VERSION = "1";
+	
+	
+	protected final Map<GoogleAnalyticsParameter, String> paramsToPost = new HashMap<GoogleAnalyticsParameter, String>();
+	
+	protected final Map<String, String> customDimentions = new HashMap<String, String>();
+	protected final Map<String, String> customMetrics = new HashMap<String, String>();
 
-	protected Map<GoogleAnalyticsParameter, String> parms = new HashMap<GoogleAnalyticsParameter, String>();
-	protected Map<String, String> customDimentions = new HashMap<String, String>();
-	protected Map<String, String> customMetrics = new HashMap<String, String>();
+	private String uaString;
 
-	public GoogleAnalyticsRequest() {
-		this(null, null, null, null);
-	}
+//	public GoogleAnalyticsRequest() {
+//		this(null, null, null, null);
+//	}
 
 	public GoogleAnalyticsRequest(String hitType) {
-		this(hitType, null, null, null);
+		this(hitType, null, null);
 	}
 
-	public GoogleAnalyticsRequest(String hitType, String trackingId, String appName, String appVersion) {
-		hitType(isEmpty(hitType)?"pageView":hitType);
-		trackingId(trackingId);
+	public GoogleAnalyticsRequest(String hitType, String appName, String appVersion) {
+		hitType(isEmpty(hitType)?DEFAULT_HIT_TYPE:hitType);
 		applicationName(appName);
 		applicationVersion(appVersion);
 
-		clientId(DEFAULT_CLIENT_ID);
-		protocolVersion("1");
+		protocolVersion(DEFAULT_PROTOCOL_VERSION);
 	}
 
 	/**
@@ -99,58 +75,58 @@ public class GoogleAnalyticsRequest<T> {
 	 */
 	protected T setString(GoogleAnalyticsParameter parameter, String value) {
 		if (value == null) {
-			parms.remove(parameter);
+			paramsToPost.remove(parameter);
 		} else {
 			String stringValue = value;
-			parms.put(parameter, stringValue);
+			paramsToPost.put(parameter, stringValue);
 		}
 		return (T) this;
 	}
 
 	protected String getString(GoogleAnalyticsParameter parameter) {
-		return parms.get(parameter);
+		return paramsToPost.get(parameter);
 	}
 
 	protected T setInteger(GoogleAnalyticsParameter parameter, Integer value) {
 		if (value == null) {
-			parms.remove(parameter);
+			paramsToPost.remove(parameter);
 		} else {
 			String stringValue = fromInteger(value);
-			parms.put(parameter, stringValue);
+			paramsToPost.put(parameter, stringValue);
 		}
 		return (T) this;
 	}
 
 	protected Double getDouble(GoogleAnalyticsParameter parameter) {
-		return toDouble(parms.get(parameter));
+		return toDouble(paramsToPost.get(parameter));
 	}
 
 	protected T setDouble(GoogleAnalyticsParameter parameter, Double value) {
 		if (value == null) {
-			parms.remove(parameter);
+			paramsToPost.remove(parameter);
 		} else {
 			String stringValue = fromDouble(value);
-			parms.put(parameter, stringValue);
+			paramsToPost.put(parameter, stringValue);
 		}
 		return (T) this;
 	}
 
 	protected Boolean getBoolean(GoogleAnalyticsParameter parameter) {
-		return toBoolean(parms.get(parameter));
+		return toBoolean(paramsToPost.get(parameter));
 	}
 
 	protected T setBoolean(GoogleAnalyticsParameter parameter, Boolean value) {
 		if (value == null) {
-			parms.remove(parameter);
+			paramsToPost.remove(parameter);
 		} else {
 			String stringValue = fromBoolean(value);
-			parms.put(parameter, stringValue);
+			paramsToPost.put(parameter, stringValue);
 		}
 		return (T) this;
 	}
 
 	protected Integer getInteger(GoogleAnalyticsParameter parameter) {
-		return toInteger(parms.get(parameter));
+		return toInteger(paramsToPost.get(parameter));
 	}
 
 	protected String fromBoolean(Boolean booleanString) {
@@ -203,23 +179,23 @@ public class GoogleAnalyticsRequest<T> {
 
 	protected T parameter(GoogleAnalyticsParameter parameter, String value) {
 		if (value == null) {
-			parms.remove(parameter);
+			paramsToPost.remove(parameter);
 		} else {
-			parms.put(parameter, value);
+			paramsToPost.put(parameter, value);
 		}
 		return (T) this;
 	}
 
 	protected String parameter(GoogleAnalyticsParameter parameter) {
-		return parms.get(parameter);
+		return paramsToPost.get(parameter);
 	}
 
 	public Map<GoogleAnalyticsParameter, String> getParameters() {
-		return parms;
+		return paramsToPost;
 	}
 
 	public String customDimention(int index) {
-		return customDimentions.get("cd" + index);
+		return customDimentions.get(CUSTOM_DIMENSION_PREFIX + index);
 	}
 
 	/**
@@ -255,7 +231,7 @@ public class GoogleAnalyticsRequest<T> {
 	 * </div>
 	 */
 	public T customDimention(int index, String value) {
-		customDimentions.put("cd" + index, value);
+		customDimentions.put(CUSTOM_DIMENSION_PREFIX + index, value);
 		return (T) this;
 	}
 
@@ -292,12 +268,12 @@ public class GoogleAnalyticsRequest<T> {
 	 * </div>
 	 */
 	public T customMetric(int index, String value) {
-		customMetrics.put("cm" + index, value);
+		customMetrics.put(CUSTOM_METRICS_PREFIX + index, value);
 		return (T) this;
 	}
 
 	public String customMetric(int index) {
-		return customMetrics.get("cm" + index);
+		return customMetrics.get(CUSTOM_METRICS_PREFIX + index);
 	}
 
 	public Map<String, String> customDimentions() {
@@ -312,9 +288,9 @@ public class GoogleAnalyticsRequest<T> {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Request [");
-		if (parms != null) {
+		if (paramsToPost != null) {
 			builder.append("parms=");
-			builder.append(parms);
+			builder.append(paramsToPost);
 			builder.append(", ");
 		}
 		if (customDimentions != null) {
@@ -1698,6 +1674,28 @@ public class GoogleAnalyticsRequest<T> {
 	
 	protected boolean isEmpty(String string) {
 		return string == null || string.trim().length() == 0;
+	}
+	
+	public T userAgent(String uaString)
+	{
+	   	this.uaString = uaString;
+		return (T) this;
+	}
+
+	public String getUserAgent() {
+		return uaString;
+	}
+
+	public void updateWithDefault(DefaultRequest defaultRequest) {
+		Map<GoogleAnalyticsParameter, String> defaultParms = defaultRequest.getParameters();
+		for (GoogleAnalyticsParameter parm : defaultParms.keySet()) {
+			String value = paramsToPost.get(parm);
+			String defaultValue = defaultParms.get(parm);
+			if (isEmpty(value) && !isEmpty(defaultValue)) {
+				paramsToPost.put(parm, defaultValue);
+			}
+		}
+		
 	}
 	
 }

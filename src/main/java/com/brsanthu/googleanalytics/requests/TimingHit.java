@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.brsanthu.googleanalytics;
+package com.brsanthu.googleanalytics.requests;
 
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.DNS_TIME;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.PAGE_DOWNLOAD_TIME;
@@ -23,6 +23,8 @@ import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_LABEL;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_TIME;
 import static com.brsanthu.googleanalytics.GoogleAnalyticsParameter.USER_TIMING_VARIABLE_NAME;
+
+import com.brsanthu.googleanalytics.GoogleAnalyticsRequest;
 
 /**
  * GA request to track performance timings like page load time, server response time etc.
