@@ -30,8 +30,7 @@ public class WSHttpClient extends HttpStack {
 		for (GoogleAnalyticsParameter key : params.keySet()) {
 			encoder.addParam(key.getParameterName(), params.get(key));
 		}
-		String body = encoder.toString();
-		body = body.substring(2);
+		String body = encoder.toString().substring(2);
 		request.body(body);
 		
 		GoogleAnalyticsResponse result = new GoogleAnalyticsResponse();
@@ -55,8 +54,6 @@ public class WSHttpClient extends HttpStack {
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

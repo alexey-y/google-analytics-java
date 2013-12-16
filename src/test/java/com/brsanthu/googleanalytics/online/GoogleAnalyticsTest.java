@@ -20,7 +20,7 @@ public class GoogleAnalyticsTest {
 
 	@BeforeClass
 	public static void setup() {
-		ga = new GoogleAnalytics("UA-44034973-2", new GoogleAnalyticsConfig());
+		ga = new GoogleAnalytics("UA-45521785-1", new GoogleAnalyticsConfig());
 		ga.setHttpClient(new WSHttpClient());
 		System.out.println("Creating Google Analytis Object");
 	}
