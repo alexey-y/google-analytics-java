@@ -2,7 +2,8 @@ package com.brsanthu.googleanalytics;
 
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
+import org.apache.log4j.Logger;
+
 
 public abstract class HttpStack {
 	

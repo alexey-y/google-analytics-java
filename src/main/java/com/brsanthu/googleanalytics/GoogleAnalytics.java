@@ -15,13 +15,8 @@ package com.brsanthu.googleanalytics;
 
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
-import java.text.MessageFormat;
-import java.util.Map;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import com.brsanthu.googleanalytics.requests.DefaultRequest;
 
@@ -42,7 +37,6 @@ import com.brsanthu.googleanalytics.requests.DefaultRequest;
 public class GoogleAnalytics {
 
 	public static final Charset UTF8 = Charset.forName("UTF-8");
-	private static final Logger logger = LoggerFactory.getLogger(GoogleAnalytics.class);
 
 	private GoogleAnalyticsConfig config;
 	private DefaultRequest defaultRequest;
@@ -53,6 +47,8 @@ public class GoogleAnalytics {
 	
 	private final String trackingId;
 
+	private Logger logger;
+
 	public GoogleAnalytics(String trackingId, GoogleAnalyticsConfig config) {
 		this.trackingId = trackingId;
 		this.config = config;
@@ -61,11 +57,19 @@ public class GoogleAnalytics {
 	public GoogleAnalyticsConfig getConfig() {
 		return config;
 	}
+	
+	public void setLogger(Logger logger)
+	{
+		this.logger = logger;
+	}
 
 	public void setHttpClient(HttpStack httpClient) {
 		this.httpClient = httpClient;
 		httpClient.setConfig(config);
-		httpClient.setLogger(logger);
+		if (logger!=null)
+		{
+			httpClient.setLogger(logger);
+		}
 	}
 
 	public DefaultRequest getDefaultRequest() {
@@ -101,7 +105,7 @@ public class GoogleAnalytics {
 				request.updateWithDefault(defaultRequest);
 			}
 
-			logger.debug("Sending " + request);
+			logger.info("Sending " + request);
 
 			response = doHttpPost(request);
 
@@ -111,9 +115,9 @@ public class GoogleAnalytics {
 
 		} catch (Exception e) {
 			if (e instanceof UnknownHostException) {
-				logger.warn("Coudln't connect to Google Analytics. Internet may not be available. " + e.toString());
+				logger.error("Coudln't connect to Google Analytics. Internet may not be available. " + e.toString());
 			} else {
-				logger.warn("Exception while sending the Google Analytics tracker request " + request, e);
+				logger.error("Exception while sending the Google Analytics tracker request " + request, e);
 			}
 		} 
 
