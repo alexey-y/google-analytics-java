@@ -47,7 +47,7 @@ public class GoogleAnalytics {
 	
 	private final String trackingId;
 
-	private Logger logger;
+	private Logger logger = Logger.getLogger(this.getClass());
 
 	public GoogleAnalytics(String trackingId, GoogleAnalyticsConfig config) {
 		this.trackingId = trackingId;
