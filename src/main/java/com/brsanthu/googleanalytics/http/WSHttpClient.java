@@ -32,7 +32,7 @@ public class WSHttpClient extends HttpStack {
 		}
 		String body = encoder.toString().substring(2);
 		request.body(body);
-		
+		logger.info("About to post request to GA: "+body);
 		GoogleAnalyticsResponse result = new GoogleAnalyticsResponse();
 
 		try {
