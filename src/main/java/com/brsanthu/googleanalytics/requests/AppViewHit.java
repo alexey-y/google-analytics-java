@@ -32,7 +32,7 @@ public class AppViewHit extends GoogleAnalyticsRequest<AppViewHit> {
 	}
 
 	public AppViewHit(String applicationName, String applicationVersion, String contentDescription) {
-		super("appView");
+		super("appview");
 		applicationName(applicationName);
 		applicationVersion(applicationVersion);
 		contentDescription(contentDescription);

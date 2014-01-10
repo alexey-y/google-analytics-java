@@ -59,7 +59,7 @@ public class DefaultRequest extends GoogleAnalyticsRequest<DefaultRequest>{
 
 	public DefaultRequest(String hitType, String appName, String appVersion) {
 		super(hitType, appName, appVersion);
-		hitType(isEmpty(hitType)?"pageView":hitType);
+		hitType(isEmpty(hitType)?"pageview":hitType);
 		applicationName(appName);
 		applicationVersion(appVersion);
 	}
